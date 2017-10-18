@@ -1,7 +1,6 @@
 // Author: Matthew Shiel
 // Date: 18/10/2017
-// 01GuessingGame
-// Adapted from: https://codegangsta.gitbooks.io/building-web-apps-with-go/content/creating_a_basic_web_app/index.html
+// 02MakeH1
 // Info on Go documentation from https://golang.org/doc/articles/wiki/#tmp_3
 
 package main
