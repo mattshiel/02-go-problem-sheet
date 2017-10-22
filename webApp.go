@@ -22,13 +22,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func guessHandler(w http.ResponseWriter, r *http.Request) {
-	// Create a new template
-	t := template.New("Guess") 
 	// Set Message
 	m := message{Message: "Guess a number between 1 and 20: "}
 	// Parse template guess.tmpl
 	t, _ = t.ParseFiles("guess.tmpl") 
-	//
+	// 
 	t.Execute(w, m)
 }
 
@@ -36,7 +34,7 @@ func main() {
 	// handler handles HTTP requests with the web root ("/")
 	http.HandleFunc("/", handler)
 
-	// guessHandler handles HTTP requests with the guess root("/")
+	// guessHandler handles HTTP requests with the guess root("/guess")
 	http.HandleFunc("/guess", guessHandler)
 
 	// ListenAndServe will start the server and instruct it to listen on port 8080
