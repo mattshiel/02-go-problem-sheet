@@ -25,8 +25,8 @@ func guessHandler(w http.ResponseWriter, r *http.Request) {
 	// Set Message
 	m := message{Message: "Guess a number between 1 and 20: "}
 	// Parse template guess.tmpl
-	t, _ = t.ParseFiles("guess.tmpl") 
-	// 
+	t, _ := template.ParseFiles("guess.tmpl") 
+	// Applies parsed template 't' and writes to output writer
 	t.Execute(w, m)
 }
 
