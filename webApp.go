@@ -8,11 +8,14 @@ package main
 
 import (
 	"html/template"
+	"math/rand"
 	"net/http"
+	"strconv"
+	"time"
 )
 
-type  message struct {
-	Message string 
+type message struct {
+	Message string
 }
 
 //
@@ -22,10 +25,30 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func guessHandler(w http.ResponseWriter, r *http.Request) {
+	// Call Seed using nanoseconds for a different random int every execution
+	rand.Seed(int64(time.Now().Nanosecond()))
+
+	// Check if the cookie 'target' is set and error handle if not
+	if _, err := r.Cookie("target"); err != nil {
+		//if cookie is not set generate a random number between 1 and 20
+		// Limit random number between 1 and 20
+		var randNum = ((rand.Int() % 19) + 1)
+
+		// Convert random number to a string
+		s := strconv.Itoa(randNum)
+
+		cookie := http.Cookie{
+			Name:  "target",
+			Value: s,
+		} // Create cookie
+
+		// Set cookie target as new value of target
+		http.SetCookie(w, &cookie)
+	}
 	// Set Message
 	m := message{Message: "Guess a number between 1 and 20: "}
 	// Parse template guess.tmpl
-	t, _ := template.ParseFiles("guess.tmpl") 
+	t, _ := template.ParseFiles("guess.tmpl")
 	// Applies parsed template 't' and writes to output writer
 	t.Execute(w, m)
 }
