@@ -1,6 +1,6 @@
 // Author: Matthew Shiel
 // Date: 22/10/2017
-// 03ServePage
+// webApp
 // Info on Go documentation from https://golang.org/doc/articles/wiki/#tmp_3
 // Adapted from: https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/07.4.html
 
@@ -16,6 +16,7 @@ import (
 
 type message struct {
 	Message string
+	Guess string
 }
 
 //
@@ -25,6 +26,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func guessHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm();
+	// Get the user guess value and store it in a variable
+	// "PostFormValue calls ParseMultipartForm and ParseForm if necessary and ignores any errors returned by these functions." 
+	guess := r.FormValue("guess")
+
 	// Call Seed using nanoseconds for a different random int every execution
 	rand.Seed(int64(time.Now().Nanosecond()))
 
@@ -45,8 +51,11 @@ func guessHandler(w http.ResponseWriter, r *http.Request) {
 		// Set cookie target as new value of target
 		http.SetCookie(w, &cookie)
 	}
+
+	// Adapted from https://astaxie.gitbooks.io/build-web-application-with-golang/de/04.1.html
+
 	// Set Message
-	m := message{Message: "Guess a number between 1 and 20: "}
+	m := message{Message: "Guess a number between 1 and 20: ", Guess: guess}
 	// Parse template guess.tmpl
 	t, _ := template.ParseFiles("guess.tmpl")
 	// Applies parsed template 't' and writes to output writer
@@ -61,5 +70,5 @@ func main() {
 	http.HandleFunc("/guess", guessHandler)
 
 	// ListenAndServe will start the server and instruct it to listen on port 8080
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8089", nil)
 }
