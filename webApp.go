@@ -69,11 +69,14 @@ func guessHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Compare target and guess 
 	if targetInt == guessInt {
-		// message = ("Congratulations you guessed correctly! You win!")
+		m.Win = true;
+		m.Message = "Congratulations you guessed correctly! You win!"
+		randNum := strconv.Itoa(rand.Intn(19) + 1)
+		http.SetCookie(w, &http.Cookie{Name: "target", Value: randNum})	
 	} else if targetInt < guessInt {
-		//message = ("Lower! Your guess was too high!")
+		m.Message = ("Lower! Your guess was too high!")
 	} else {
-		//message = ("Higher! Your guess was too low!")
+		m.Message = ("Higher! Your guess was too low!")
 	}
 
 	// Parse template guess.tmpl
@@ -91,5 +94,5 @@ func main() {
 	http.HandleFunc("/guess", guessHandler)
 
 	// ListenAndServe will start the server and instruct it to listen on port 8080
-	http.ListenAndServe(":8089", nil)
+	http.ListenAndServe(":8093", nil)
 }
