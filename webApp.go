@@ -16,7 +16,8 @@ import (
 
 type message struct {
 	Message string
-	Guess string
+	Guess   string
+	Win     bool
 }
 
 //
@@ -26,16 +27,23 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func guessHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm();
-	// Get the user guess value and store it in a variable
-	// "PostFormValue calls ParseMultipartForm and ParseForm if necessary and ignores any errors returned by these functions." 
+	// Parse the form in /guess
+	r.ParseForm()
+
+	// Get the user guess and store it in a variable to be returned, if none the text won't be displayed
 	guess := r.FormValue("guess")
+
+	// Ask user to guess a number
+	question := "Guess a number between 1 and 20: "
 
 	// Call Seed using nanoseconds for a different random int every execution
 	rand.Seed(int64(time.Now().Nanosecond()))
 
+	// Declare variable before error handling so it is within scope to be compared to guess
+	cookie, err := r.Cookie("target"); 
+
 	// Check if the cookie 'target' is set and error handle if not
-	if _, err := r.Cookie("target"); err != nil {
+	if err != nil {
 		//if cookie is not set generate a random number between 1 and 20
 		// Limit random number between 1 and 20
 		var randNum = ((rand.Int() % 19) + 1)
@@ -43,21 +51,34 @@ func guessHandler(w http.ResponseWriter, r *http.Request) {
 		// Convert random number to a string
 		s := strconv.Itoa(randNum)
 
+		// Create cookie
 		cookie := http.Cookie{
 			Name:  "target",
 			Value: s,
-		} // Create cookie
+		}
 
 		// Set cookie target as new value of target
 		http.SetCookie(w, &cookie)
 	}
 
-	// Adapted from https://astaxie.gitbooks.io/build-web-application-with-golang/de/04.1.html
+	guessInt, _ := strconv.Atoi(guess)
+	targetInt, _ := strconv.Atoi(cookie.Value)
 
-	// Set Message
-	m := message{Message: "Guess a number between 1 and 20: ", Guess: guess}
+	// Set the message and guess Strings and Win boolean values
+	m := message{Message: question, Guess: guess, Win: false}
+
+	// Compare target and guess 
+	if targetInt == guessInt {
+		// message = ("Congratulations you guessed correctly! You win!")
+	} else if targetInt < guessInt {
+		//message = ("Lower! Your guess was too high!")
+	} else {
+		//message = ("Higher! Your guess was too low!")
+	}
+
 	// Parse template guess.tmpl
 	t, _ := template.ParseFiles("guess.tmpl")
+
 	// Applies parsed template 't' and writes to output writer
 	t.Execute(w, m)
 }
