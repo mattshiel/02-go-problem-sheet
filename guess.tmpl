@@ -16,7 +16,7 @@
 </head>
 
 <body>
-<h2>{{.Message}}</h2>
+<h2>{{.Question}}</h2>
 
   <!-- Bootstrap CSS -->
   <!-- Form takes a number as the user's guess -->
@@ -29,6 +29,7 @@
    <!-- Adapted from https://golang.org/pkg/text/template/ -->
   {{ if .Guess }} 
     <p>You guessed {{.Guess}}</p>
+    <p>{{.Message}}</p>
       {{ if .Win}} 
         <a href="/guess">Want to play again?</a>
       {{end}}

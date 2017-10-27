@@ -18,6 +18,7 @@ type message struct {
 	Message string
 	Guess   string
 	Win     bool
+	Question string
 }
 
 //
@@ -65,7 +66,7 @@ func guessHandler(w http.ResponseWriter, r *http.Request) {
 	targetInt, _ := strconv.Atoi(cookie.Value)
 
 	// Set the message and guess Strings and Win boolean values
-	m := message{Message: question, Guess: guess, Win: false}
+	m := message{Question: question, Guess: guess, Win: false}
 
 	// Compare target and guess 
 	if targetInt == guessInt {
@@ -94,5 +95,5 @@ func main() {
 	http.HandleFunc("/guess", guessHandler)
 
 	// ListenAndServe will start the server and instruct it to listen on port 8080
-	http.ListenAndServe(":8093", nil)
+	http.ListenAndServe(":8094", nil)
 }
