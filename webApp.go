@@ -95,5 +95,5 @@ func main() {
 	http.HandleFunc("/guess", guessHandler)
 
 	// ListenAndServe will start the server and instruct it to listen on port 8080
-	http.ListenAndServe(":8094", nil)
+	http.ListenAndServe(":8080", nil)
 }
